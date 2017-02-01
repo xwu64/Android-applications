@@ -26,8 +26,8 @@
         android:scrollbars="vertical"/>
 
     <EditText
-        android:layout_width="156dp"
-        android:layout_height="89dp"
+        android:layout_width="158dp"
+        android:layout_height="56dp"
         android:hint="Input Temperature"
         android:id="@+id/inputText"
         android:textSize="15sp"
@@ -39,7 +39,7 @@
         android:gravity="bottom|center_vertical"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="0.75" />
+        app:layout_constraintVertical_bias="0.19" />
 
     <RadioGroup
         android:layout_width="0dp"
@@ -82,5 +82,30 @@
         app:layout_constraintTop_toBottomOf="@+id/radioGroup"
         app:layout_constraintVertical_bias="0.41000003"
         android:onClick="convert" />
+
+    <TextView
+        android:layout_width="159dp"
+        android:id="@+id/convertResult"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/inputText"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:textSize="15sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@android:color/background_dark" />
+
+    <TextView
+        android:text="||"
+        android:layout_width="68dp"
+        android:layout_height="24dp"
+        android:id="@+id/textView2"
+        app:layout_constraintBottom_toTopOf="@+id/convertResult"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@android:color/background_dark"
+        android:layout_marginStart="56dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="56dp" />
 </android.support.constraint.ConstraintLayout>
 

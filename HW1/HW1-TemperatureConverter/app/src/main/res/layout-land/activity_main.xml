@@ -25,19 +25,18 @@
         app:layout_constraintTop_toTopOf="parent"
         android:scrollbars="vertical" />
     <EditText
-        android:hint="Input Temperature"
+        android:hint="Input"
         android:id="@+id/inputText"
         android:textSize="20sp"
         android:textColor="@android:color/black"
         app:layout_constraintLeft_toLeftOf="@+id/outputText"
         android:inputType="numberDecimal|numberSigned"
-        android:gravity="bottom|center_vertical"
         android:layout_height="50dp"
-        android:layout_width="250dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="40dp" />
+        android:layout_width="115dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/convertResult"
+        android:gravity="center_vertical|center_horizontal" />
 
     <Button
         android:text="Convert"
@@ -47,10 +46,10 @@
         android:layout_marginBottom="40dp"
         app:layout_constraintVertical_bias="1.0"
         android:layout_width="250dp"
-        android:layout_marginStart="40dp"
-        app:layout_constraintLeft_toRightOf="@+id/inputText"
-        android:layout_marginLeft="40dp"
-        android:onClick="convert" />
+        android:onClick="convert"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/convertResult"
+        android:layout_marginLeft="8dp" />
 
     <RadioGroup
         android:layout_width="0dp"
@@ -79,5 +78,31 @@
             android:id="@+id/f2c"
             android:layout_weight="0.75" />
     </RadioGroup>
+
+    <TextView
+        android:layout_height="50dp"
+        android:id="@+id/convertResult"
+        android:gravity="center_vertical|center_horizontal"
+        android:textSize="20sp"
+        android:textColor="@android:color/background_dark"
+        android:layout_width="115dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="48dp"
+        app:layout_constraintLeft_toRightOf="@+id/inputText"
+        android:layout_marginLeft="48dp" />
+
+    <TextView
+        android:text="="
+        android:layout_width="11dp"
+        android:layout_height="20dp"
+        android:id="@+id/textView3"
+        android:textSize="15sp"
+        android:textColor="@android:color/background_dark"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toRightOf="@+id/inputText"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="56dp" />
 </android.support.constraint.ConstraintLayout>
 
