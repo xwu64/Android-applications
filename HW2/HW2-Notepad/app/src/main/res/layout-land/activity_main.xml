@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.iit.xwu64.hw2_notepad.MainActivity">
+
+    <TextView
+        android:layout_height="270dp"
+        android:text="Last update: "
+        android:id="@+id/lastUpdateTime"
+        android:layout_width="177dp"
+        android:textColor="@android:color/background_dark"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_vertical|center_horizontal" />
+    <EditText
+        android:layout_width="366dp"
+        android:layout_height="270dp"
+        android:id="@+id/noteText"
+        android:gravity="top|left"
+        android:inputType="text|textMultiLine"
+        android:scrollHorizontally="false"
+        android:textColor="@android:color/background_dark"
+        android:scrollbars="vertical"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fadeScrollbars="false"
+        android:layout_marginRight="16dp" />
+</android.support.constraint.ConstraintLayout>
