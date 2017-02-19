@@ -1,7 +1,14 @@
 # Homework Index
 
-1. Assignment 1 – Temperature Converter
+- Assignment 1 – Temperature Converter
 
-2. Assignment 2 – Notepad
+![ss](./src/hw1.png)
 
-3. Assignment 3 - Multi Notepad
+- Assignment 2 – Notepad
+
+![ss](./src/hw2.png)
+
+- Assignment 3 - Multi Notepad
+
+![ss](./src/hw3.png)
+
