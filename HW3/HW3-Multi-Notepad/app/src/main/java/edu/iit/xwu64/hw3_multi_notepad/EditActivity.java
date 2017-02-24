@@ -72,6 +72,7 @@ public class EditActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (note.getContent().equals(contentText.getText().toString()) && note.getTitle().equals(titleText.getText().toString())){
             super.onBackPressed();
+            return;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Exit");

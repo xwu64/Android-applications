@@ -212,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 reader.endArray();
                 reader.close();
+                noteAdapter.notifyDataSetChanged();
 
             } catch (FileNotFoundException e) {
                 try {
