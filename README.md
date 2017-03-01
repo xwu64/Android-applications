@@ -12,3 +12,6 @@
 
 ![ss](./src/hw3.png)
 
+- Assignment 4 - Stock Watch
+
+![ss](./src/hw4.png)
