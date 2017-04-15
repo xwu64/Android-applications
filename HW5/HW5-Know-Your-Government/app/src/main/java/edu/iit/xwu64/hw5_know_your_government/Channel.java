@@ -1,10 +1,13 @@
 package edu.iit.xwu64.hw5_know_your_government;
 
+import java.io.Serializable;
+import java.security.SecureRandom;
+
 /**
  * Created by xiaoliangwu on 2017/4/5.
  */
 
-public class Channel {
+public class Channel implements Serializable{
     private String googlePlusId;
     private String facebookId;
     private String twitterId;

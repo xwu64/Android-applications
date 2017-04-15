@@ -1,17 +1,17 @@
 package edu.iit.xwu64.hw5_know_your_government;
 
 
-import android.location.Address;
+import java.io.Serializable;
 
 /**
  * Created by xiaoliangwu on 2017/4/5.
  */
 
-public class Official {
+public class Official implements Serializable{
 
     private String officeName;
     private String name;
-    private Address address;
+    private String address;
     private String party;
     private String phone;
     private String url;
@@ -28,6 +28,7 @@ public class Official {
         this.officeName = officeName;
     }
 
+
     public String getName() {
         return name;
     }
@@ -36,7 +37,7 @@ public class Official {
         return officeName;
     }
 
-    public Address getAddress() {
+    public String getAddress() {
         return address;
     }
 
@@ -72,7 +73,7 @@ public class Official {
         this.officeName = officeName;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 

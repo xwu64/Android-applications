@@ -31,7 +31,8 @@ public class OfficialAdapter extends RecyclerView.Adapter<MyViewHolder>{
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
         Official official = officialList.get(position);
-        holder.row_name.setText(official.getName());
+        if (official.getParty() == null) holder.row_name.setText(official.getName());
+        else holder.row_name.setText(official.getName()+'('+official.getParty()+')');
         holder.row_office.setText(official.getOfficeName());
     }
 

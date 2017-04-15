@@ -4,13 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        app:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_info_details"
         android:id="@+id/menuInfo"
-        android:title="info" />
+        android:icon="@drawable/help"
+        android:title="info"
+        app:showAsAction="always" />
     <item
-        app:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_search"
         android:id="@+id/menuSearch"
-        android:title="search" />
+        android:icon="@drawable/location"
+        android:title="search"
+        app:showAsAction="always" />
 </menu>

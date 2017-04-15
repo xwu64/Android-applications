@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,7 +22,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -30,24 +43,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView recyclerView;
     private List<Official> officialList = new ArrayList<>();
     private OfficialAdapter officialAdapter;
-    private TextView locationTextView;
+    private static TextView locationTextView;
     private Locator locator;
+    private static MainActivity mainActivity;
+    private TextView warning;
+    private ConnectivityManager cm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        officialList.add(new Official("president", "name 1"));
-        officialList.add(new Official("vice president", "name 2"));
-
         recyclerView = (RecyclerView) findViewById(R.id.myrecycler);
         officialAdapter = new OfficialAdapter(officialList, this);
+        locationTextView = (TextView) findViewById(R.id.locationTextView);
         recyclerView.setAdapter(officialAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mainActivity = this;
 
-        locationTextView = (TextView) findViewById(R.id.locationTextView);
-        locator = new Locator(this);
+        if (networkCheck()){
+            locator = new Locator(this);
+            AsyncDataLoader adl = new AsyncDataLoader(this);
+            adl.execute(locationTextView.getText().toString());
+        } else {
+            warning = (TextView) findViewById(R.id.ma_warning);
+            warning.setVisibility(View.VISIBLE);
+        }
+
 
     }
 
@@ -68,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             case R.id.menuSearch:
                 searchButton();
+
+
+
             default:return super.onOptionsItemSelected(item);
         }
     }
@@ -75,13 +101,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         int pos = recyclerView.getChildAdapterPosition(v);
-        Context context = getApplicationContext();
-        CharSequence text = officialList.get(pos).getName();
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
+        Intent intent = new Intent(this, OfficialActivity.class);
+        intent.putExtra("location", locationTextView.getText().toString());
+        intent.putExtra("official", officialList.get(pos));
+        startActivityForResult(intent, 1);
     }
+
+
 
     public void searchButton(){
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -92,16 +118,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setView(view);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 EditText inputTextView = (EditText) view.findViewById(R.id.inputTextView);
                 String input = inputTextView.getText().toString();
-                Context context = getApplicationContext();
-                CharSequence text = input;
-                int duration = Toast.LENGTH_SHORT;
 
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+                AsyncDataLoader asyncDataLoader = new AsyncDataLoader(mainActivity);
+                asyncDataLoader.execute(input);
             }
         });
 
@@ -111,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+
 
         AlertDialog alert = builder.create();
         alert.show();
@@ -137,8 +162,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
-        locator.shutdown();
+        if (networkCheck() == false) locator.shutdown();
         super.onDestroy();
+    }
+
+    public void addOfficial(Official official){
+        officialList.add(official);
+        officialAdapter.notifyDataSetChanged();
+    }
+
+    public void clearOfficial(){
+        officialList.clear();
+    }
+
+    public void setLocationText(String location){
+        locationTextView.setText(location);
+    }
+
+    public void test(String s){
+        Log.d("test",s);
+        locationTextView.setText(s);
+    }
+
+    public Boolean networkCheck(){
+        cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo !=null && netInfo.isConnectedOrConnecting())return true;
+        else return false;
     }
 }
 //curl "https://www.googleapis.com/civicinfo/v2/representatives?key=AIzaSyCoRMp-XScdHeWT_XtyZKiaPB4Rme3QZlI&address=1263%20Pacific%20Ave.%20Kansas%20City%20KS"
