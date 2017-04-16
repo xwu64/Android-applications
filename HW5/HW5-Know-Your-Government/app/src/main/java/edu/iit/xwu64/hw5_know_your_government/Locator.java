@@ -95,6 +95,7 @@ public class Locator {
                 Toast.makeText(owner, "Update from " + location.getProvider(), Toast.LENGTH_SHORT).show();
                 Log.d("get position", ""+location.getLatitude()+location.getLongitude());
                 owner.setLocation(location.getLatitude(), location.getLongitude());
+                owner.warningClose();
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {

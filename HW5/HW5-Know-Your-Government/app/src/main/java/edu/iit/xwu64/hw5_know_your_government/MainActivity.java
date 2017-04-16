@@ -7,6 +7,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -61,16 +62,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setAdapter(officialAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mainActivity = this;
+        warning = (TextView) findViewById(R.id.ma_warning);
 
         if (networkCheck()){
             locator = new Locator(this);
-            AsyncDataLoader adl = new AsyncDataLoader(this);
-            adl.execute(locationTextView.getText().toString());
         } else {
-            warning = (TextView) findViewById(R.id.ma_warning);
-            warning.setVisibility(View.VISIBLE);
+            warningShow("Cannot connect to network");
         }
 
+        if (locationTextView.getText().toString().equals("No Data For Location")) warningShow("close app and reopen!");
 
     }
 
@@ -158,11 +158,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else{
             locationTextView.setText(addresses.get(0).getAddressLine(1).toString());
         }
+
+        AsyncDataLoader adl = new AsyncDataLoader(this);
+
+        adl.execute(locationTextView.getText().toString());
+
     }
 
     @Override
     protected void onDestroy() {
-        if (networkCheck() == false) locator.shutdown();
         super.onDestroy();
     }
 
@@ -189,6 +193,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo !=null && netInfo.isConnectedOrConnecting())return true;
         else return false;
+    }
+
+    public void warningShow(String update){
+        warning.setVisibility(View.VISIBLE);
+        warning.setText(update);
+    }
+
+    public void warningClose(){
+        warning.setVisibility(View.INVISIBLE);
     }
 }
 //curl "https://www.googleapis.com/civicinfo/v2/representatives?key=AIzaSyCoRMp-XScdHeWT_XtyZKiaPB4Rme3QZlI&address=1263%20Pacific%20Ave.%20Kansas%20City%20KS"

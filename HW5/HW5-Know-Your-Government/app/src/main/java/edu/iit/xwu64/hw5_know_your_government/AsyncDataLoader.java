@@ -31,6 +31,7 @@ public class AsyncDataLoader extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
+        Log.d("async", params[0]);
         String location = params[0];
 
         StringBuilder sb = new StringBuilder();
@@ -66,7 +67,6 @@ public class AsyncDataLoader extends AsyncTask<String, Void, String> {
         try {
             JSONObject jObjMain = new JSONObject(s);
 
-            mainActivity.clearOfficial();
             JSONObject jNormalInput = jObjMain.getJSONObject("normalizedInput");
 
             String locationText = jNormalInput.getString("city")+", "+jNormalInput.getString("state")+" "+jNormalInput.getString("zip");
@@ -75,6 +75,8 @@ public class AsyncDataLoader extends AsyncTask<String, Void, String> {
             JSONArray jArrayOfficials = jObjMain.getJSONArray("officials");
 
             int length = jArrayOffices.length();
+            mainActivity.clearOfficial();
+
             for (int i = 0; i<length; i++){
                 JSONObject jObj = jArrayOffices.getJSONObject(i);
                 String officeName = jObj.getString("name");

@@ -23,7 +23,7 @@
         android:layout_width="0dp"
         android:layout_height="23dp"
         android:background="@color/colorPrimary"
-        android:text="Hello World!"
+        android:text="No Data For Location"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textSize="18sp"
