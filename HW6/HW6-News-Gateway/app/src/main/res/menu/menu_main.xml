@@ -1,4 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:id="@+id/menu_all"
+        android:title="all" />
+    <item
+        android:id="@+id/menu_business"
+        android:title="business" />
+    <item
+        android:id="@+id/menu_entertainment"
+        android:title="Entertainment" />
+    <item
+        android:id="@+id/menu_gaming"
+        android:title="gaming" />
+    <item
+        android:id="@+id/menu_general"
+        android:title="general" />
+    <item
+        android:id="@+id/menu_music"
+        android:title="music" />
+    <item
+        android:id="@+id/menu_politics"
+        android:title="politics" />
+    <item
+        android:id="@+id/menu_Science"
+        android:title="science-and-nature" />
+    <item
+        android:id="@+id/menu_sport"
+        android:title="sport" />
+    <item
+        android:id="@+id/menu_technology"
+        android:title="technology" />
 </menu>
