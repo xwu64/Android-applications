@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by xiaoliangwu on 2017/4/19.
@@ -22,11 +23,11 @@ import java.net.URL;
 
 public class AsyncArticleLoader extends AsyncTask<String, Void, String> {
 
-    private MainActivity mainActivity;
+    private NewsService newsService;
     private String prefix="https://newsapi.org/v1/articles?apiKey=6ea83d10d8e4414c82259877303b1a13&source=";
 
-    public AsyncArticleLoader(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    public AsyncArticleLoader(NewsService newsService) {
+        this.newsService = newsService;
     }
 
     @Override
@@ -36,7 +37,6 @@ public class AsyncArticleLoader extends AsyncTask<String, Void, String> {
 
         try {
             URL url = new URL(prefix+source);
-            Log.d("url", url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             InputStream is = conn.getInputStream();
@@ -61,12 +61,9 @@ public class AsyncArticleLoader extends AsyncTask<String, Void, String> {
     }
 
     private void parseJson(String s) {
-        Log.d("parese", s);
         try {
             JSONObject jObjMain = new JSONObject(s);
             JSONArray jArrSources = jObjMain.getJSONArray("articles");
-            mainActivity.clearArticles();
-
             for (int i =0; i<jArrSources.length(); i++){
                 JSONObject jObjSource = jArrSources.getJSONObject(i);
                 String author = jObjSource.getString("author");
@@ -76,8 +73,8 @@ public class AsyncArticleLoader extends AsyncTask<String, Void, String> {
                 String urlToImage = jObjSource.getString("urlToImage");
                 String publishedAt = jObjSource.getString("publishedAt");
 
-                Article article = new Article(author, title, description, url, urlToImage, publishedAt, jArrSources.length(), i);
-                mainActivity.addArticle(article);
+                newsService.addArticle(new Article(author, title, description, url, urlToImage, publishedAt, jArrSources.length(), i));
+                if (isCancelled()) return;
             }
         } catch (JSONException e) {
             e.printStackTrace();

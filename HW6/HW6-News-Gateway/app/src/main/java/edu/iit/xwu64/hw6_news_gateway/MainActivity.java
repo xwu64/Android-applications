@@ -1,7 +1,14 @@
 package edu.iit.xwu64.hw6_news_gateway;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.os.Parcelable;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,10 +27,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    static final String ACTION_NEWS_STORY = "ACTION_NEWS_STORY";
+    static final String ACTION_NEWS_SOURCE = "ACTION_NEWS_SOURCE";
+    static final String REQUEST_ARTICLES = "REQUEST_ARTICLES";
+    static final String RESPONSE_ARTICLES = "RESPONSE_ARTICLES";
+
+    private NewsReceiver newsReceiver;
 
     private ArrayList<NewsSource> sourceList = new ArrayList<>();
 
@@ -33,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> fragments;
     private MyPageAdapter pageAdapter;
     private ViewPager pager;
+    private AsyncArticleLoader aal;
 
     private ArrayAdapter<NewsSource> newsSourceArrayAdapter;
 
@@ -41,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //create service
+        Intent intent = new Intent(MainActivity.this, NewsService.class);
+        startService(intent);
+
+        newsReceiver = new NewsReceiver();
+
+        registerReceiver(newsReceiver, new IntentFilter(RESPONSE_ARTICLES));
+        registerReceiver(newsReceiver, new IntentFilter(REQUEST_ARTICLES));
 
 
 
@@ -65,19 +92,47 @@ public class MainActivity extends AppCompatActivity {
         });
 
         fragments = new ArrayList<Fragment>();
+
+        Log.d("create",""+fragments.size());
         pageAdapter = new MyPageAdapter(getSupportFragmentManager());
         pager = (ViewPager) findViewById(R.id.viewpager);
         pager.setAdapter(pageAdapter);
+
+//        Article test = new Article("a", "b", "c", "google.com", "https://developer.android.com/images/fragment_lifecycle.png?hl=zh-cn", "aT", 3,1);
+//        fragments.add( ArticleFragment.newInstance(test));
+
+        if (savedInstanceState != null){
+            fragments = (List<Fragment>) savedInstanceState.getSerializable("fragments");
+            Log.d("Load", savedInstanceState.getString("title")+" "+fragments.size());
+            setTitle(savedInstanceState.getString("title"));
+            pageAdapter.notifyDataSetChanged();
+            for (int i = 0; i< pageAdapter.getCount(); i++) pageAdapter.notifyChangeInPosition(i);
+        }
     }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(newsReceiver);
+        Intent intent = new Intent(MainActivity.this, NewsService.class);
+        stopService(intent);
+        super.onDestroy();
+    }
+
+    //TODO: avoid down
     private void selectSource(int position) {
         Toast.makeText(this, sourceList.get(position).getName(), Toast.LENGTH_SHORT).show();
         setTitle(sourceList.get(position).getName());
-//        reDoFragments(position);
-        AsyncArticleLoader aal = new AsyncArticleLoader(this);
-        aal.execute(sourceList.get(position).getId());
+//        if (aal != null) aal.cancel(true);
+//
+//        aal = new AsyncArticleLoader(this);
+//        aal.execute(sourceList.get(position).getId());
 
-        pager.setCurrentItem(0);
+
+        Intent requestIntent = new Intent();
+        requestIntent.setAction(MainActivity.REQUEST_ARTICLES);
+        requestIntent.putExtra("source", sourceList.get(position).getId());
+        sendBroadcast(requestIntent);
+
         Log.d("fragments len", ""+fragments.size());
         mDrawerLayout.closeDrawer(mDrawerList);
     }
@@ -103,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
 //        newsSourceArrayAdapter.notifyDataSetChanged();
 
         AsyncSourceLoader asl = new AsyncSourceLoader(this);
+
         if (item.toString().equals("all")) asl.execute("");
         else asl.execute(item.toString());
 
@@ -124,21 +180,17 @@ public class MainActivity extends AppCompatActivity {
         sourceList.clear();
     }
 
-    public void addArticle(Article article){
-        fragments.add(ArticleFragment.newInstance(article));
-        pageAdapter.notifyDataSetChanged();
-    }
 
-    public void clearArticles(){
-        for (int i = 0; i< pageAdapter.getCount(); i++) pageAdapter.notifyChangeInPosition(i);
-        fragments.clear();
-        pageAdapter.notifyDataSetChanged();
-    }
 
     private class MyPageAdapter extends FragmentPagerAdapter{
         private long baseId = 0;
         public MyPageAdapter(FragmentManager fm) {
             super(fm);
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
 
         @Override
@@ -161,4 +213,37 @@ public class MainActivity extends AppCompatActivity {
             baseId += getCount() + n;
         }
     }
+
+    //TODO:broadcast
+    public class NewsReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()){
+                case RESPONSE_ARTICLES:
+                    ArrayList<Article> articles = (ArrayList<Article>) intent.getSerializableExtra("articles");
+                    fragments.clear();
+                    for (int i = 0; i<articles.size(); i++){
+                        fragments.add(ArticleFragment.newInstance(articles.get(i)));
+                        pageAdapter.notifyChangeInPosition(i);
+                    }
+                    pageAdapter.notifyDataSetChanged();
+                    pager.setCurrentItem(0);
+//                case REQUEST_ARTICLES:
+//                    String s = intent.getStringExtra("test");
+//                    Toast.makeText(MainActivity.this, "Broadcast Message req Received: " + s, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("fragments", (Serializable) fragments);
+        outState.putString("title",getTitle().toString());
+        Log.d("save", ""+fragments.get(0).toString());
+        super.onSaveInstanceState(outState);
+    }
+
 }

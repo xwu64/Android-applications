@@ -19,6 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".NewsService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <receiver android:name=".MainActivity$NewsReceiver" android:exported="true"></receiver>
+        <receiver android:name=".NewsService$ServiceReceiver" android:exported="true"></receiver>
     </application>
 
 </manifest>

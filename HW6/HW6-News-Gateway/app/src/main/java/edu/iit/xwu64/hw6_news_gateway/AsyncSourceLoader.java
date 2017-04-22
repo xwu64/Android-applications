@@ -62,7 +62,6 @@ public class AsyncSourceLoader extends AsyncTask<String, Void, String>{
     }
 
     private void parseJson(String s) {
-        Log.d("parese", s);
         try {
             JSONObject jObjMain = new JSONObject(s);
             JSONArray jArrSources = jObjMain.getJSONArray("sources");

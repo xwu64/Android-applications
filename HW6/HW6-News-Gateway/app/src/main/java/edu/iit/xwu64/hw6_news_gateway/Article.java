@@ -23,7 +23,7 @@ public class Article implements Serializable {
         this.url = url;
         this.urlToImage = urlToImage;
         this.publishedAt = publishedAt;
-        this.total = total+1;
+        this.total = total;
         this.index = index+1;
     }
 
