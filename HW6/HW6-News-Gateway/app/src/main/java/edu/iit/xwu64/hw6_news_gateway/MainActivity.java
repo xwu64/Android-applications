@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
         fragments = new ArrayList<Fragment>();
 
-        Log.d("create",""+fragments.size());
         pageAdapter = new MyPageAdapter(getSupportFragmentManager());
         pager = (ViewPager) findViewById(R.id.viewpager);
         pager.setAdapter(pageAdapter);
@@ -103,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState != null){
             fragments = (List<Fragment>) savedInstanceState.getSerializable("fragments");
-            Log.d("Load", savedInstanceState.getString("title")+" "+fragments.size());
             setTitle(savedInstanceState.getString("title"));
             pageAdapter.notifyDataSetChanged();
             for (int i = 0; i< pageAdapter.getCount(); i++) pageAdapter.notifyChangeInPosition(i);
@@ -133,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         requestIntent.putExtra("source", sourceList.get(position).getId());
         sendBroadcast(requestIntent);
 
-        Log.d("fragments len", ""+fragments.size());
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
@@ -242,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putSerializable("fragments", (Serializable) fragments);
         outState.putString("title",getTitle().toString());
-        Log.d("save", ""+fragments.get(0).toString());
         super.onSaveInstanceState(outState);
     }
 

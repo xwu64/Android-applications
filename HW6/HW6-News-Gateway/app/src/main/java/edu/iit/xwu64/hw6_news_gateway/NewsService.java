@@ -65,7 +65,6 @@ public class NewsService extends Service{
                 }
             }
         }).start();
-        Log.d("service", "thread over");
         return START_STICKY;
     }
 
@@ -78,7 +77,6 @@ public class NewsService extends Service{
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("service", "receive and send "+intent.getAction().toString()+" "+intent.getStringExtra("test"));
             AsyncArticleLoader asyncArticleLoader = new AsyncArticleLoader(newsService);
             asyncArticleLoader.execute(intent.getStringExtra("source"));
         }
